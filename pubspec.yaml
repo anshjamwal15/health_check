@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: ^0.14.4
+  firebase_core: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -20,6 +23,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/android12splash.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -29,7 +35,7 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
-  # For details regarding adding assets from package dependencies, see
+  # For details regarding adding assets from package depiendencies, see
   # https://flutter.dev/to/asset-from-package
 
   # To add custom fonts to your application, add a fonts section here,
@@ -51,3 +57,21 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_native_splash:
+  color: "#ffffff" # background color
+  image: assets/logo.png # normal splash image (Android <12, iOS)
+  android: true
+  ios: true
+  web: false
+
+  android_12:
+    image: assets/android12splash.png
+    color: "#ffffff"
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: null
+  adaptive_icon_foreground: null
