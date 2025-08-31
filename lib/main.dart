@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_check/app.dart';
+import 'package:health_check/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:health_check/states/app_state.dart';
 import 'package:health_check/states/user_state.dart';

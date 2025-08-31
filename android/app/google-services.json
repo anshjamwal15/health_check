@@ -12,7 +12,12 @@
           "package_name": "com.example.health_check"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "913823162958-tn6out1lh5rg4tf7qdnke2s02pkk3ect.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD3aFVnh8xrFczU-gWtoA2iWRy6oBQ8jIM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913823162958-tn6out1lh5rg4tf7qdnke2s02pkk3ect.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "913823162958-esdj7kvffg979faduap6v632ri88oide.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.healthCheck"
+              }
+            }
+          ]
         }
       }
     }

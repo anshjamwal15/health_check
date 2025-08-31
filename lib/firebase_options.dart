@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '913823162958',
     projectId: 'health-check-94501',
     storageBucket: 'health-check-94501.firebasestorage.app',
+    iosClientId: '913823162958-esdj7kvffg979faduap6v632ri88oide.apps.googleusercontent.com',
     iosBundleId: 'com.example.healthCheck',
   );
+
 }

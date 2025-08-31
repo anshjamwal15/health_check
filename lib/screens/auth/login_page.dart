@@ -7,6 +7,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userService = UserService();
+    String error = "";
 
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
@@ -14,10 +15,23 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (error.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(error, style: const TextStyle(color: Colors.red)),
+              ),
             ElevatedButton.icon(
               icon: const Icon(Icons.login),
               label: const Text("Sign in with Google"),
-              onPressed: () => userService.signInWithGoogle(context),
+              onPressed: () async {
+                final result = await userService.signInWithGoogle(context);
+                if (result == "null") {
+                  error = result;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Google sign-in failed")),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
