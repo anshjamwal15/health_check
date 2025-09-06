@@ -26,19 +26,20 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 final result = await userService.signInWithGoogle(context);
                 if (result == "null") {
-                  error = result;
+                  // error = result;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Google sign-in failed")),
                   );
                 }
               },
             ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt),
-              label: const Text("Sign in with Instagram"),
-              onPressed: () => userService.signInWithInstagram(context),
-            ),
+            // const SizedBox(height: 16),
+            // ElevatedButton.icon(
+            //   icon: const Icon(Icons.camera_alt),
+            //   label: const Text("Sign in with Instagram"),
+            //   onPressed: () => {},
+            //   // onPressed: () => userService.signInWithInstagram(context),
+            // ),
           ],
         ),
       ),
