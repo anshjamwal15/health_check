@@ -1,16 +1,19 @@
 import 'package:health_check/models/base_model.dart';
+import 'package:health_check/states/app_state.dart';
 
 class User extends BaseModel {
   final String id;
   String name;
   String email;
-  String phoneNumber;
+  String photoUrl;
+  AppStatus appStatus;
 
   User({
     required this.id,
     required this.name,
     required this.email,
-    required this.phoneNumber,
+    required this.photoUrl,
+    this.appStatus = AppStatus.unknown,
     super.createdAt,
     super.updatedAt,
     super.deletedAt,
@@ -27,8 +30,13 @@ class User extends BaseModel {
     touch();
   }
 
-  set updatePhoneNumber(String newNumber) {
-    phoneNumber = newNumber;
+  set updatePhotoUrl(String newPhotoUrl) {
+    photoUrl = newPhotoUrl;
+    touch();
+  }
+
+  set updateAppStatus(AppStatus newStatus) {
+    appStatus = newStatus;
     touch();
   }
 
@@ -38,7 +46,8 @@ class User extends BaseModel {
       'id': id,
       'name': name,
       'email': email,
-      'phone_number': phoneNumber,
+      'phone_number': photoUrl,
+      'app_status': appStatus.name, // save enum as string
       ...super.toMap(), // adds created_at, updated_at, deleted_at
     };
   }
@@ -49,7 +58,8 @@ class User extends BaseModel {
       id: map['id'],
       name: map['name'],
       email: map['email'],
-      phoneNumber: map['phone_number'] ?? '',
+      photoUrl: map['phone_number'] ?? '',
+      appStatus: _mapToAppStatus(map['app_status']),
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])
           : null,
@@ -62,8 +72,39 @@ class User extends BaseModel {
     );
   }
 
+  /// Helper to safely map String to Enum
+  static AppStatus _mapToAppStatus(dynamic value) {
+    if (value == null) return AppStatus.unknown;
+    return AppStatus.values.firstWhere(
+      (e) => e.name == value,
+      orElse: () => AppStatus.unknown,
+    );
+  }
+
   /// Create User from Firestore Document
   factory User.fromDocument(Map<String, dynamic> doc) {
     return User.fromMap(doc);
+  }
+
+  User copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? photoUrl,
+    AppStatus? appStatus,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      appStatus: appStatus ?? this.appStatus,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
   }
 }

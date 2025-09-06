@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:health_check/states/app_state.dart';
 import 'package:provider/provider.dart';
 
 import 'package:health_check/states/user_state.dart';
@@ -10,29 +11,31 @@ class UserService {
   final fb_auth.FirebaseAuth _auth = fb_auth.FirebaseAuth.instance;
 
   /// Google login
-  Future<fb_auth.User?> signInWithGoogle(BuildContext context) async {
+  Future<custom.User?> signInWithGoogle(BuildContext context) async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final googleSignIn = GoogleSignIn();
+
+      // 🔹 Get providers before await
+      final appState = context.read<AppState>();
+      final userState = context.read<UserState>();
 
       // Trigger the Google sign-in flow
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) return null; // user cancelled
 
       // Get authentication tokens
-      final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
       // Firebase credential from Google auth
       final fb_auth.AuthCredential credential =
-      fb_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+          fb_auth.GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
 
       // Sign in to Firebase
-      final fb_auth.UserCredential userCredential =
-      await _auth.signInWithCredential(credential);
-      final fb_auth.User? firebaseUser = userCredential.user;
+      final userCredential = await _auth.signInWithCredential(credential);
+      final firebaseUser = userCredential.user;
 
       if (firebaseUser != null) {
         // Create app user model
@@ -40,19 +43,21 @@ class UserService {
           id: firebaseUser.uid,
           name: firebaseUser.displayName ?? '',
           email: firebaseUser.email ?? '',
-          phoneNumber: firebaseUser.photoURL ?? '',
+          photoUrl: firebaseUser.photoURL ?? '',
+          appStatus: appState.status,
         );
 
-        // Update states
-        Provider.of<UserState>(context, listen: false).setUser(appUser);
-        // Provider.of<AppState>(context, listen: false).setLoggedIn(true);
-      }
+        // 🔹 Update states safely
+        userState.setUser(appUser);
+        appState.login();
 
-      return firebaseUser;
-    } catch (e) {
-      debugPrint("Google sign-in error: $e");
+        return appUser;
+      }
+    } catch (e, st) {
+      debugPrint("Google sign-in error: $e\n$st");
       return null;
     }
+    return null;
   }
 
   /// General logout (only Google supported for now)

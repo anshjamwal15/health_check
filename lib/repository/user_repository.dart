@@ -1,6 +1,7 @@
 import 'package:health_check/models/user.dart';
 import 'package:health_check/repository/base_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:health_check/utils/shared_prefrences.dart';
 
 class UserRepository implements BaseRepository<User> {
   final CollectionReference _usersRef = FirebaseFirestore.instance.collection(
@@ -11,10 +12,14 @@ class UserRepository implements BaseRepository<User> {
   Future<void> create(User user) async {
     user.touch(); // set createdAt/updatedAt
     await _usersRef.doc(user.id).set(user.toMap());
+    await SharedPreferencesUtil.saveUser(user);
   }
 
   @override
   Future<User?> read(String id) async {
+    final cachedUser = await SharedPreferencesUtil.getUser();
+    if (cachedUser != null) return cachedUser;
+
     final doc = await _usersRef.doc(id).get();
     if (!doc.exists) return null;
     return User.fromDocument(doc.data() as Map<String, dynamic>);
@@ -24,6 +29,7 @@ class UserRepository implements BaseRepository<User> {
   Future<void> update(User user) async {
     user.touch(); // update updatedAt
     await _usersRef.doc(user.id).update(user.toMap());
+    await SharedPreferencesUtil.saveUser(user);
   }
 
   @override
@@ -35,6 +41,7 @@ class UserRepository implements BaseRepository<User> {
     final user = User.fromDocument(doc.data() as Map<String, dynamic>);
     user.markDeleted();
     await _usersRef.doc(id).update(user.toMap());
+    await SharedPreferencesUtil.deleteUser();
   }
 
   @override

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:health_check/screens/auth/login_page.dart';
 import 'package:health_check/screens/home/home_page.dart';
+import 'package:health_check/screens/onbarding_page.dart';
+import 'package:health_check/screens/profile/profile_setup_page.dart';
 import 'package:health_check/states/app_state.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +12,10 @@ class App extends StatelessWidget {
 
   List<Page> onGeneratePages(AppStatus status, List<Page> pages) {
     switch (status) {
+      case AppStatus.onboarding:
+        return [const MaterialPage(child: OnboardingPage())];
+      case AppStatus.profileIncomplete:
+        return [const MaterialPage(child: ProfileSetupPage())];
       case AppStatus.authenticated:
         return [const MaterialPage(child: HomePage())];
       case AppStatus.unauthenticated:

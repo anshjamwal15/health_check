@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_check/services/user_service.dart';
+import 'package:health_check/utils/app_utils.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -8,6 +9,11 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userService = UserService();
     String error = "";
+
+    void snackBar(String message) {
+      // ignore: use_build_context_synchronously
+      AppUtils.showSnackBar(context, message);
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
@@ -25,11 +31,9 @@ class LoginPage extends StatelessWidget {
               label: const Text("Sign in with Google"),
               onPressed: () async {
                 final result = await userService.signInWithGoogle(context);
-                if (result == "null") {
+                if (result == null) {
                   // error = result;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Google sign-in failed")),
-                  );
+                  snackBar("Google sign-in failed");
                 }
               },
             ),
