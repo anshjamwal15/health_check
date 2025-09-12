@@ -66,4 +66,36 @@ class SharedPreferencesUtil {
       await saveUser(newUser);
     }
   }
+
+  /// Save App Status
+  static Future<void> saveAppStatus(String status) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_status', status);
+  }
+
+  /// Get App Status
+  static Future<String?> getAppStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('app_status');
+  }
+
+  /// Save Bottom Navigation Index
+  static Future<void> saveBottomNavIndex(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('bottom_nav_index', index);
+  }
+
+  /// Get Bottom Navigation Index
+  static Future<int> getBottomNavIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('bottom_nav_index') ?? 0;
+  }
+
+  /// Clear all app state data
+  static Future<void> clearAppState() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('app_status');
+    await prefs.remove('bottom_nav_index');
+    await prefs.remove('user');
+  }
 }

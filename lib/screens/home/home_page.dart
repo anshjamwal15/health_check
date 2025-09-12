@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_check/services/user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:health_check/states/user_state.dart';
+import 'package:health_check/utils/shared_prefrences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,10 +14,25 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
-  void onTabTapped(int index) {
+  @override
+  void initState() {
+    super.initState();
+    _loadBottomNavIndex();
+  }
+
+  Future<void> _loadBottomNavIndex() async {
+    final savedIndex = await SharedPreferencesUtil.getBottomNavIndex();
+    setState(() {
+      currentIndex = savedIndex;
+    });
+  }
+
+  Future<void> onTabTapped(int index) async {
     setState(() {
       currentIndex = index;
     });
+    // Save the selected tab index
+    await SharedPreferencesUtil.saveBottomNavIndex(index);
   }
 
   @override
@@ -41,11 +57,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text("Hey, ${user?.name ?? ''}"),
-            const SizedBox(height: 16.0),
-            // ElevatedButton(
-            //   onPressed: () => userService.logout(context),
-            //   child: const Text("Logout"),
-            // ),
+          
           ],
         ),
       ),

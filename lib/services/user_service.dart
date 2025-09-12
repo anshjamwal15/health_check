@@ -48,8 +48,8 @@ class UserService {
         );
 
         // 🔹 Update states safely
-        userState.setUser(appUser);
-        appState.login();
+        await userState.setUser(appUser);
+        await appState.login();
 
         return appUser;
       }
@@ -76,8 +76,8 @@ class UserService {
       await _auth.signOut();
 
       // Clear states
-      Provider.of<UserState>(context, listen: false).clearUser();
-      // Provider.of<AppState>(context, listen: false).setLoggedIn(false);
+      await Provider.of<UserState>(context, listen: false).clearUser();
+      await Provider.of<AppState>(context, listen: false).logout();
     } catch (e) {
       debugPrint("Logout error: $e");
     }
