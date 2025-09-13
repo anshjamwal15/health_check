@@ -31,6 +31,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -39,6 +40,20 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+
+    packagingOptions {
+        pickFirst("**/libc++_shared.so")
+        pickFirst("**/libjsc.so")
+        pickFirst("**/libjsc.so")
+        pickFirst("**/libfbjni.so")
+        pickFirst("**/libfolly_futures.so")
+        pickFirst("**/libglog.so")
+        pickFirst("**/libgflags.so")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -52,4 +67,5 @@ dependencies {
     // implementation("com.google.firebase:firebase-auth")
     // implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-core:20.1.2")
+    implementation("androidx.multidex:multidex:2.0.1")
 }

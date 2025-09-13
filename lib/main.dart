@@ -4,6 +4,7 @@ import 'package:health_check/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:health_check/states/app_state.dart';
 import 'package:health_check/states/user_state.dart';
+import 'package:health_check/states/schedule_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -13,12 +14,18 @@ void main() async {
   // Initialize app state and restore from storage
   final appState = AppState();
   final userState = UserState();
+  final scheduleState = ScheduleState();
   
   // Initialize user state first to check if user exists
   await userState.initializeFromStorage();
   
   // Initialize app state from storage
   await appState.initializeFromStorage();
+  
+  // Initialize schedule state if user exists
+  if (userState.user != null) {
+    await scheduleState.initializeFromStorage(userState.user!.id);
+  }
   
   // Set up callback for AppState to sync with Firebase through UserState
   appState.setStatusChangeCallback((AppStatus newStatus) async {
@@ -35,6 +42,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: appState),
         ChangeNotifierProvider.value(value: userState),
+        ChangeNotifierProvider.value(value: scheduleState),
       ],
       child: const App(),
     ),
